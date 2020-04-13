@@ -16,9 +16,8 @@ export class ShoppingListComponent implements OnInit {
     this.ingredients = this.sLService.getIngredients();
     this.sLService.ingredientsChanged.subscribe(
       (ingredients: Ingredient[]) => {
-        this.ingredients = ingredients
+        this.ingredients = ingredients;
       }
-    )
+    );
   }
-
 }
