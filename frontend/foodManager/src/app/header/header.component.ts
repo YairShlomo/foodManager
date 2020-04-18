@@ -18,8 +18,6 @@ export class HeaderComponent implements OnInit,OnDestroy {
   
   ngOnInit() {
     this.userSub = this.authSrevice.user.subscribe(user => {
-      console.log(!user)
-      console.log(!!user)
       this.isAuthenticate = !!user;
     });
   }
@@ -29,8 +27,7 @@ export class HeaderComponent implements OnInit,OnDestroy {
   }
 
   onFetchData() {
-    this.dataStorageService.fetchRecipes()
-    .subscribe();
+    this.dataStorageService.fetchRecipes().subscribe();
   }
 
   ngOnDestroy() {
