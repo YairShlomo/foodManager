@@ -5,7 +5,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { take, exhaustMap } from 'rxjs/operators';
 
 @Injectable()
-export class AuthInterceptors implements HttpInterceptor{
+export class AuthInterceptorService implements HttpInterceptor{
 
     constructor(private authService: AuthService) {}
 
