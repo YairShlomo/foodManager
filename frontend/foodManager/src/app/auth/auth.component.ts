@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ComponentFactoryResolver, ViewChild, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService, AuthResponseData } from './auth.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { AlertComponent } from '../shared/alert.component';
+import { PlaceholderDirective } from '../shared/placeholder.directive';
 
 @Component({
     selector: 'app-auth',
     templateUrl: './auth.component.html'
 })
-export class AuthComponent implements OnInit{
+export class AuthComponent implements OnInit {
     isLoginMode = true;
     authForm: FormGroup;
     isLoading = false;
@@ -53,5 +55,9 @@ export class AuthComponent implements OnInit{
             }
         );
         this.authForm.reset();
+    }
+
+    onHandleError() {
+        this.error = null;
     }
 }
