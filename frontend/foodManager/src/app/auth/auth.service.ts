@@ -24,7 +24,7 @@ export class AuthService {
 
     signUp(email: string, password: string) {
         return this.htttp
-            .post<AuthResponseData>(environment.firebaseUrl + 'signUp?key=' + environment.firebaseAPIKey,{
+            .post<AuthResponseData>(environment.JPA_API_URL + 'signUp?key=' + environment.firebaseAPIKey,{
                 'email' : email,
                 'password' : password,
                 'returnSecureToken' : true
@@ -40,11 +40,11 @@ export class AuthService {
             })
         );
     }
-    
+
 
     logIn(email: string, password: string) {
         return this.htttp
-            .post<AuthResponseData>(environment.firebaseUrl + 'signInWithPassword?key=' + environment.firebaseAPIKey,
+            .post<AuthResponseData>(environment.JPA_API_URL + 'signInWithPassword?key=' + environment.firebaseAPIKey,
                 {
                 'email' : email,
                 'password' : password,

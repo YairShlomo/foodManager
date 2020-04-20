@@ -4,7 +4,7 @@ import { RecipeService } from '../recipes/recipe.service';
 import { Recipe } from '../recipes/recipe.model';
 import { map, tap, take, exhaustMap } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
-
+import { environment } from '../../environments/environment'
 @Injectable({providedIn: 'root'})
 export class DataStorageService {
     constructor(private http: HttpClient,
@@ -19,10 +19,10 @@ export class DataStorageService {
             console.log(response)
         })
     }
-
+    
     fetchRecipes() {
         return this.http.get<Recipe[]>(
-            'https://foodmanager-44c07.firebaseio.com/recipes.json'
+          `${environment.JPA_API_URL}/recipes/all`
         )
         .pipe(
         //map is rxjs operator
