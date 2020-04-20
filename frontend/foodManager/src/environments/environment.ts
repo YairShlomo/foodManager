@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   firebaseAPIKey: 'AIzaSyB_k2Boiqq11pY2WS-FL_F66xD7I19ikZg',
-  firebaseUrl: "https://identitytoolkit.googleapis.com/v1/accounts:"
+  API_URL : "http://localhost:8080",
+  JPA_API_URL : "http://localhost:8080/jpa"
 };
 
 /*
