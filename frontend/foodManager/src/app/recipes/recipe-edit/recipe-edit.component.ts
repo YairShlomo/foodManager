@@ -14,6 +14,8 @@ export class RecipeEditComponent implements OnInit {
   id: number;
   editMode = false;
   recipeForm: FormGroup;
+  recipeId: number = -1;
+  mailOwner: string = 'yyaaiirr1@gmail.com';
   constructor(private route: ActivatedRoute,
     private recipeService: RecipeService,
     private router: Router) { }
@@ -37,6 +39,8 @@ export class RecipeEditComponent implements OnInit {
 
     if (this.editMode) {
       const recipe = this.recipeService.getRecipe(this.id)
+      this.recipeId = recipe.id
+      this.mailOwner = recipe.mailOwner
       recipeName = recipe.name;
       recipeImagePath = recipe.imagePath;
       recipeDesc = recipe.description;
@@ -63,12 +67,29 @@ export class RecipeEditComponent implements OnInit {
   }
 
   onSubmit() {
+    var recipe: Recipe = this.createRecipe(this.recipeForm.value);
+    console.log(recipe);
     if (this.editMode) {
-      this.recipeService.updateRecipe(this.id,this.recipeForm.value)
+      this.recipeService.updateRecipe(this.id,recipe)
     } else {
-      this.recipeService.addRecipe(this.recipeForm.value)
+      this.recipeService.addRecipe(recipe)
     }
     this.onCancel();
+  }
+
+  createRecipe(formVal) {
+    //var id: number = this.recipeForm.value['id'];
+    var name: string = this.recipeForm.value['name'];
+    var desc: string = this.recipeForm.value['description'];
+    var imagePath: string = this.recipeForm.value['imagePath'];
+    var ingredients: Ingredient[] = this.recipeForm.value['ingredients'];
+
+    return new Recipe(this.recipeId,
+      this.mailOwner,
+      name,
+      desc,
+      imagePath,
+      ingredients)
   }
 
   get controls() { // a getter!

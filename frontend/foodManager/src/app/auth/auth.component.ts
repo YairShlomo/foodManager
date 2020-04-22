@@ -38,6 +38,9 @@ export class AuthComponent implements OnInit {
         let authObs: Observable<AuthResponseData>;
 
         this.isLoading = true;
+        // no auth only
+        this.router.navigate(['/recipes']);
+        /*
         if (this.isLoginMode) {
             authObs = this.authService.logIn(email,password);
         } else {
@@ -53,6 +56,7 @@ export class AuthComponent implements OnInit {
                 this.isLoading = false;
             }
         );
+        */
         this.authForm.reset();
     }
 
