@@ -9,8 +9,9 @@ import { CoreModule } from './core.module';
 
 @NgModule({
   declarations: [
-    AppComponent, 
-    HeaderComponent],
+    AppComponent,
+    HeaderComponent,
+    ],
   imports: [
     BrowserModule,
     HttpClientModule,

@@ -6,57 +6,55 @@ import { User } from './user.model';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment'
 export interface AuthResponseData {
-    kind: string;
-    idToken: string;
     email: string;
-    refreshToken: string;
-    expiresIn: string;
-    localId: string;
-    registered?: boolean;
+    token: string;
+    expirationDate: Date;
+    username: string;
 }
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
     user = new BehaviorSubject<User>(null);
     private tokenExpirationTimer: any;
-    constructor(private htttp: HttpClient,
+    constructor(private http: HttpClient,
         private router: Router) {}
 
-    signUp(email: string, password: string) {
-        return this.htttp
-            .post<AuthResponseData>(environment.JPA_API_URL + 'signUp?key=' + environment.firebaseAPIKey,{
+    signUp(email: string, username: string, password: string) {
+        var url = environment.API_URL + '/signUp';
+        return this.http
+            .post<AuthResponseData>(url,
+                {
                 'email' : email,
                 'password' : password,
-                'returnSecureToken' : true
+                'username' : username
                 }
             ).pipe(catchError(this.handleError),
             tap(resData => {
-               this.handleAuthentication(
+              this.handleAuthentication(
                 resData.email,
-                resData.localId,
-                resData.idToken,
-                +resData.expiresIn
+                resData.username,
+                resData.token,
+                resData.expirationDate
                 );
             })
         );
     }
 
 
-    logIn(email: string, password: string) {
-        return this.htttp
-            .post<AuthResponseData>(environment.JPA_API_URL + 'signInWithPassword?key=' + environment.firebaseAPIKey,
+    logIn(username: string, password: string) {
+        return this.http
+            .post<AuthResponseData>(environment.API_URL + '/signIn',
                 {
-                'email' : email,
+                'username' : username,
                 'password' : password,
-                'returnSecureToken' : true
                 }
             ).pipe(catchError(this.handleError),
             tap(resData => {
                 this.handleAuthentication(
-                 resData.email,
-                 resData.localId,
-                 resData.idToken,
-                 +resData.expiresIn
+                  resData.email,
+                  resData.username,
+                  resData.token,
+                  resData.expirationDate
                  );
              })
         );
@@ -65,8 +63,8 @@ export class AuthService {
     autoLogIn() {
         const userData: {
             email: string;
-            id: string;
-            _token: string
+            username: string;
+            _token: string;
             _tokenExpirationDate: string;
         } = JSON.parse(localStorage.getItem('userData'));
         if (!userData) {
@@ -74,7 +72,7 @@ export class AuthService {
         }
         const loadedUser = new User(
             userData.email,
-            userData.id,
+            userData.username,
             userData._token,
             new Date(userData._tokenExpirationDate)
         );
@@ -86,11 +84,12 @@ export class AuthService {
         }
     };
 
-    private handleAuthentication(email: string, userId: string, token:string, expiresIn: number) {
-        const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
-        const user = new User(email,userId,token,expirationDate);
+    private handleAuthentication(email: string, username: string, token:string, expirationDate: Date) {
+        const user = new User(email,username,token,expirationDate);
         this.user.next(user);
-        this.autoLogOut(expiresIn * 1000);
+        const expirationDuration = new Date(
+          expirationDate).getTime() - new Date().getTime();
+        this.autoLogOut(expirationDuration);
         localStorage.setItem('userData',JSON.stringify(user));
     }
 
@@ -112,12 +111,12 @@ export class AuthService {
 
     private handleError(errorRes: HttpErrorResponse) {
         let errorMessage = "An unknown error occured!";
-        if (!errorRes.error || !errorRes.error.error) {
-            return throwError(errorMessage);
+        if (!errorRes.error) {
+          return throwError(errorMessage);
         }
-        switch (errorRes.error.error.message) {
-            case 'EMAIL_EXISTS':
-                errorMessage = 'This email exists already';
+        switch (errorRes.error) {
+            case 'USER_EXISTS':
+                errorMessage = 'This user exists already';
                 break;
             case 'EMAIL_NOT_FOUND':
                 errorMessage = 'This email does not exist';

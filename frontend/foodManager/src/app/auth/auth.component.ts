@@ -1,8 +1,9 @@
 import { Component, OnInit} from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { AuthService, AuthResponseData } from './auth.service';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { throwIfEmpty } from 'rxjs/operators';
 
 
 @Component({
@@ -20,13 +21,21 @@ export class AuthComponent implements OnInit {
 
     ngOnInit() {
         this.authForm = new FormGroup({
-            'email': new FormControl(null,[Validators.required,Validators.email]),
-            'password': new FormControl(null,[Validators.required,Validators.minLength(6)])
+            'email': new FormControl(null),
+            'password': new FormControl(null),
+            'username': new FormControl(null,[Validators.required])
         });
     }
 
     onSwitchMode() {
         this.isLoginMode = !this.isLoginMode;
+        this.authForm.reset();
+        //var elem = document.getElementById("switch");
+        if (!this.isLoginMode) {
+          this.authForm.controls['email'].setValidators([Validators.required,Validators.email]);
+        } else {
+          this.authForm.controls['email'].setValidators([]);
+        }
     }
 
     onSubmit() {
@@ -35,16 +44,15 @@ export class AuthComponent implements OnInit {
         }
         const email = this.authForm.value.email;
         const password = this.authForm.value.password;
+        const username = this.authForm.value.username;
+
         let authObs: Observable<AuthResponseData>;
 
         this.isLoading = true;
-        // no auth only
-        this.router.navigate(['/recipes']);
-        /*
         if (this.isLoginMode) {
-            authObs = this.authService.logIn(email,password);
+            authObs = this.authService.logIn(username,password);
         } else {
-            authObs = this.authService.signUp(email, password);
+            authObs = this.authService.signUp(email,username, password);
         }
         authObs.subscribe(
             resData => {
@@ -56,7 +64,6 @@ export class AuthComponent implements OnInit {
                 this.isLoading = false;
             }
         );
-        */
         this.authForm.reset();
     }
 
