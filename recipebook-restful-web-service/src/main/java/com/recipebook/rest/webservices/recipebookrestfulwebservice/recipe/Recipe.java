@@ -20,7 +20,6 @@ public class Recipe {
 	//@Convert(converter = JpaConverterJson.class)
     @ElementCollection
     @CollectionTable(name = "recipe_ingredients", joinColumns = @JoinColumn(name = "recipe_id"))
-    //@Column(name = "phone_number")
 	private List<Ingredient> ingredients;
 
 	public Recipe(Long id, String mailOwner, String name, String description, String imagePath,

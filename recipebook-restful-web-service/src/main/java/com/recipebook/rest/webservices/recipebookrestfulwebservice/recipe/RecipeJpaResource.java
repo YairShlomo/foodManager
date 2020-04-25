@@ -37,20 +37,14 @@ public class RecipeJpaResource {
 			Recipe recipe = recipes[i];
 			recipesList.add(recipe);
 		}
+		recipeJpaRepository.deleteAll();
 		List<Recipe> updatedRecipes = recipeJpaRepository.saveAll(recipesList);
 		Recipe[] recipesArray = {};
 		recipesArray = updatedRecipes.toArray(recipesArray);
-		/*
-		Recipe array[] = {};
-		Recipe[] updatedRecipes = {};
-		for(int i=0;i<recipes.length;i++) {
-			Recipe updatedRecipe = recipeJpaRepository.save(recipes[i]);
-			updatedRecipes[i]= updatedRecipe;
-		}
-		*/
 		return new ResponseEntity<Recipe[]>(recipesArray, HttpStatus.OK);
 	}
 	
+	/*
 	@PutMapping("/jpa/users/{mailOwner}/recipe")
 	public ResponseEntity<Recipe> updateRecipe(
 			@PathVariable String mailOwner,@RequestBody Recipe recipe) {
@@ -62,9 +56,8 @@ public class RecipeJpaResource {
 		} else {
 			updatedRecipe = recipeJpaRepository.save(recipe);
 		}
-
-
 		//recipeJpaRepository.deleteById(id);
 		return new ResponseEntity<Recipe>(updatedRecipe, HttpStatus.OK);
 	}
+	*/
 }
