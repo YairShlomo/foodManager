@@ -22,20 +22,22 @@ export class AuthComponent implements OnInit {
     ngOnInit() {
         this.authForm = new FormGroup({
             'email': new FormControl(null),
-            'password': new FormControl(null),
+            'password': new FormControl(null,[Validators.required,Validators.minLength(6)]),
             'username': new FormControl(null,[Validators.required])
         });
     }
 
     onSwitchMode() {
         this.isLoginMode = !this.isLoginMode;
-        this.authForm.reset();
-        //var elem = document.getElementById("switch");
+        //this.authForm.reset();
         if (!this.isLoginMode) {
+          console.log("setfullvald")
           this.authForm.controls['email'].setValidators([Validators.required,Validators.email]);
         } else {
-          this.authForm.controls['email'].setValidators([]);
+          console.log("clearvald")
+          this.authForm.controls['email'].clearValidators();
         }
+        this.authForm.controls['email'].updateValueAndValidity()
     }
 
     onSubmit() {
