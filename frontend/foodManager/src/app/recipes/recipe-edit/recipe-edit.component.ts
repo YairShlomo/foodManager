@@ -15,7 +15,7 @@ export class RecipeEditComponent implements OnInit {
   editMode = false;
   recipeForm: FormGroup;
   recipeId: number = -1;
-  mailOwner: string = 'yyaaiirr1@gmail.com';
+  mailOwner: string;
   constructor(private route: ActivatedRoute,
     private recipeService: RecipeService,
     private router: Router) { }

@@ -29,7 +29,7 @@ export class AuthComponent implements OnInit {
 
     onSwitchMode() {
         this.isLoginMode = !this.isLoginMode;
-        //this.authForm.reset();
+        this.authForm.reset();
         if (!this.isLoginMode) {
           console.log("setfullvald")
           this.authForm.controls['email'].setValidators([Validators.required,Validators.email]);

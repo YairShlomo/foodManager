@@ -91,6 +91,7 @@ export class AuthService {
           expirationDate).getTime() - new Date().getTime();
         this.autoLogOut(expirationDuration);
         localStorage.setItem('userData',JSON.stringify(user));
+        
     }
 
     logOut() {
