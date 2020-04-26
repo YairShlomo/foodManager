@@ -36,13 +36,17 @@ public class RecipeJpaResource {
 		for(int i=0;i<recipes.length;i++) {
 			Recipe recipe = recipes[i];
 			recipesList.add(recipe);
-			recipeJpaRepository.deleteById(recipe.getId());
+			//recipeJpaRepository.deleteById(recipe.getId());
 		}
 		List<Recipe> updatedRecipes = recipeJpaRepository.saveAll(recipesList);
 		Recipe[] recipesArray = {};
 		recipesArray = updatedRecipes.toArray(recipesArray);
 		return new ResponseEntity<Recipe[]>(recipesArray, HttpStatus.OK);
 	}
+	
+
+	
+	
 	
 	/*
 	@PutMapping("/jpa/users/{mailOwner}/recipe")

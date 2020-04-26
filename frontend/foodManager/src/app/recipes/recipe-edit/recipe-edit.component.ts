@@ -29,6 +29,10 @@ export class RecipeEditComponent implements OnInit {
         this.initForm();
       }
     )
+    const userEmail: {
+      email: string;
+    } = JSON.parse(localStorage.getItem('userData'));
+        this.mailOwner = userEmail.email;
   }
 
   private initForm() {
@@ -40,7 +44,6 @@ export class RecipeEditComponent implements OnInit {
     if (this.editMode) {
       const recipe = this.recipeService.getRecipe(this.id)
       this.recipeId = recipe.id
-      this.mailOwner = recipe.mailOwner
       recipeName = recipe.name;
       recipeImagePath = recipe.imagePath;
       recipeDesc = recipe.description;
@@ -68,7 +71,6 @@ export class RecipeEditComponent implements OnInit {
 
   onSubmit() {
     var recipe: Recipe = this.createRecipe(this.recipeForm.value);
-    console.log(recipe);
     if (this.editMode) {
       this.recipeService.updateRecipe(this.id,recipe)
     } else {

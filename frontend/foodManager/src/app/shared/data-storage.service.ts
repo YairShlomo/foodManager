@@ -30,8 +30,6 @@ export class DataStorageService {
   }
 
   fetchRecipes() {
-    console.log("dd");
-    console.log("s" + this.email);
     return this.http
       .get<Recipe[]>(`${environment.JPA_API_URL}/users/${this.email}/recipes`)
       .pipe(
