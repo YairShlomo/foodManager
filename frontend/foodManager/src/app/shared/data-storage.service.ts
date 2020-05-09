@@ -14,10 +14,10 @@ export class DataStorageService {
     private recipeService: RecipeService,
     private authService: AuthService
   ) {
-    const userEmail: {
-      email: string;
-    } = JSON.parse(localStorage.getItem('userData'));
-        this.email = userEmail.email;
+    authService.user
+    .subscribe((user) => {
+      this.email = user.email
+    });
   }
 
   storeRecipes() {
@@ -30,6 +30,7 @@ export class DataStorageService {
   }
 
   fetchRecipes() {
+
     return this.http
       .get<Recipe[]>(`${environment.JPA_API_URL}/users/${this.email}/recipes`)
       .pipe(

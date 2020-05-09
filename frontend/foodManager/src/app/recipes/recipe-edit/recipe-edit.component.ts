@@ -4,6 +4,7 @@ import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { RecipeService } from '../recipe.service';
 import { Ingredient } from 'src/app/shared/ingredient.model';
 import { Recipe } from '../recipe.model';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -18,7 +19,8 @@ export class RecipeEditComponent implements OnInit {
   mailOwner: string;
   constructor(private route: ActivatedRoute,
     private recipeService: RecipeService,
-    private router: Router) { }
+    private router: Router,
+    private authService: AuthService) { }
 
   ngOnInit(): void {
     this.route.params
@@ -29,10 +31,10 @@ export class RecipeEditComponent implements OnInit {
         this.initForm();
       }
     )
-    const userEmail: {
-      email: string;
-    } = JSON.parse(localStorage.getItem('userData'));
-        this.mailOwner = userEmail.email;
+    this.authService.user
+    .subscribe((user) => {
+      this.mailOwner = user.email
+    });
   }
 
   private initForm() {

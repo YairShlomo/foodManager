@@ -7,6 +7,7 @@ import javax.persistence.Converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.recipebook.rest.webservices.recipebookrestfulwebservice.ingredient.Ingredient;
 
 @Converter(autoApply = true)
 public class JpaConverterJson implements AttributeConverter<Ingredient, String> {
