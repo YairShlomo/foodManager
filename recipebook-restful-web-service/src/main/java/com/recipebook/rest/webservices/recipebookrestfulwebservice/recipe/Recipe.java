@@ -99,16 +99,6 @@ public class Recipe {
 	public Set<Ingredient> getIngredients() {
 		return ingredients;
 	}
-	/*
-	 * public Set<Ingredient> addIngredients() { //HashMap<Integer,Ingredient>
-	 * existMap = new HashMap<Integer,Ingredient>(); Set<Ingredient> existSet = new
-	 * HashSet<Ingredient>(); //List<Ingredient> exist = new
-	 * ArrayList<Ingredient>(); for (Ingredient ing : this.ingredients) { if
-	 * (ing.getIng_id() == null) { //System.out.println("false");
-	 * addIngredient(ing); } else { existSet.add(ing); } }
-	 * 
-	 * return existSet; }
-	 */
 
 	public void addIngredient(Ingredient ingredient) {
 		// prevent endless loop

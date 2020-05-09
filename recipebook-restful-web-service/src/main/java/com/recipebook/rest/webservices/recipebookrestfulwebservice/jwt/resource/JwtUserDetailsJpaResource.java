@@ -183,7 +183,6 @@ public class JwtUserDetailsJpaResource implements UserDetailsService {
 				Ingredient existIdIng = ingredientJpaRepository.findById(id).get();
 				user.addIngredient(existIdIng);
 			}
-
 		});
 
 		JwtUserDetails updatedUser = userDetailsJpaRepository.save(user);

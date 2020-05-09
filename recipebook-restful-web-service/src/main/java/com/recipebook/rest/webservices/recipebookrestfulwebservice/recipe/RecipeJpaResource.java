@@ -55,7 +55,6 @@ public class RecipeJpaResource {
 		List<Recipe> recipeToDelete = new ArrayList<Recipe>();
 		user.getRecipes().forEach(recipe -> {
 			if (!newRecipes.contains(recipe)) {
-				System.out.println("add recipe to delete");
 				recipeToDelete.add(recipe);
 			}
 		});
@@ -66,36 +65,28 @@ public class RecipeJpaResource {
 		});
 		newRecipes.forEach(recipe -> {
 			if (recipe.getUser() == null) {
-				// Set<Ingredient> existSet = new HashSet<Ingredient>();
-
-				for (Ingredient ing : recipe.getIngredients()) {
+				List<Ingredient> ingToAdd = new ArrayList<Ingredient>();
+				recipe.getIngredients().forEach(ing -> {
+						ingToAdd.add(ing);
+				});
+				for (Ingredient ing : ingToAdd) {
 					Long id = ing.getIng_id();
 					if (id == null) {
 						Ingredient existIng = ingredientJpaRepository.findByNameAndAmount(ing.getName(),
 								ing.getAmount());
-
 						if (existIng != null) {
 							recipe.getIngredients().remove(ing);
 							Ingredient existIdIng = ingredientJpaRepository.findById(existIng.getIng_id()).get();
-
 							recipe.addIngredient(existIdIng);
-
 						} else {
 							recipe.addIngredient(ing);
 						}
 					} else {
 						Ingredient existIdIng = ingredientJpaRepository.findById(id).get();
 						recipe.addIngredient(existIdIng);
-					}
+					}	
 				}
-
-				/*
-				 * Set<Ingredient> existSet = recipe.addIngredients(); for(Ingredient ing:
-				 * existSet) { Long id = ing.getIng_id(); Ingredient existIng =
-				 * ingredientJpaRepository.findById(id).get(); recipe.addIngredient(existIng); }
-				 */
 				user.addRecipe(recipe);
-				System.out.println("ing added");
 			}
 
 		});

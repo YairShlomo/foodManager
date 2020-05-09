@@ -73,25 +73,17 @@ public class Ingredient {
 	}
 
 	public void addRecipe(Recipe recipe) {
-		System.out.println("add recipe");
 		// prevent endless loop
 		if (recipes.contains(recipe)) {
 			return;
 		}
 		recipes.add(recipe);
 		recipe.addIngredient(this);
-
 	}
 
 	public void deleteRecipe(Recipe recipe) {
 		this.recipes.remove(recipe);
 	}
-
-	/*
-	 * public void setRecipes(Set<Recipe> newRecipes) {
-	 * System.out.println("set setRecipes in Ingredients"); this.recipes =
-	 * newRecipes; }
-	 */
 
 	public void addUser(JwtUserDetails user) {
 		// prevent endless loop
@@ -110,12 +102,6 @@ public class Ingredient {
 	public Set<JwtUserDetails> getUsers() {
 		return users;
 	}
-	/*
-	 * public void setUsers(Set<JwtUserDetails> users) { //for (JwtUserDetails user:
-	 * users) { this.users = users;
-	 * 
-	 * }
-	 */
 
 	public Long getAmount() {
 		return amount;
@@ -149,7 +135,7 @@ public class Ingredient {
 				return false;
 		} else if (!ing_id.equals(other.ing_id))
 			return false;
-		/*
+		
 		if (amount == null) {
 			if (other.amount != null)
 				return false;
@@ -161,7 +147,7 @@ public class Ingredient {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-			*/
+			
 		return true;
 	}
 	
