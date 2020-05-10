@@ -2,6 +2,7 @@ import { Component , OnInit, OnDestroy} from '@angular/core';
 import { DataStorageService } from '../shared/data-storage.service';
 import { AuthService } from '../auth/auth.service';
 import { Subscription } from 'rxjs';
+import { Router, NavigationEnd} from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -11,32 +12,51 @@ import { Subscription } from 'rxjs';
 
 export class HeaderComponent implements OnInit,OnDestroy {
   private userSub : Subscription;
+  private currPath : Subscription;
   private email: String;
   isAuthenticate = false;
+  inRecipesBar = true;
 
   constructor(private dataStorageService: DataStorageService,
-    private authSrevice: AuthService) {}
+    private authSrevice: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.userSub = this.authSrevice.user.subscribe(user => {
       this.isAuthenticate = !!user;
     });
+    this.currPath = this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd ) {
+        if (event.url.includes("recipes")) {
+          this.inRecipesBar = true;
+        } else {
+          this.inRecipesBar = false;
+        }
+      }
+      }
+    )
   }
 
   onSaveData() {
-    this.dataStorageService.storeRecipes();
+    if(this.inRecipesBar) {
+      this.dataStorageService.storeRecipes();
+    } else {
+      this.dataStorageService.storeShoppingList();
+    }
   }
 
   onFetchData() {
-    this.dataStorageService.fetchRecipes().subscribe();
-  }
-
-  onSelectedPage($event) {
-    console.log($event);
+    if(this.inRecipesBar) {
+      this.dataStorageService.fetchRecipes().subscribe();
+    } else {
+      this.dataStorageService.fetchShoppingList().subscribe();
+    }
   }
 
   ngOnDestroy() {
     this.userSub.unsubscribe();
+    this.currPath.unsubscribe();
   }
 
   onLogOut() {

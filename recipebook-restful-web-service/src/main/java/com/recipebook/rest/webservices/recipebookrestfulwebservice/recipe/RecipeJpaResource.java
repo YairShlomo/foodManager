@@ -41,17 +41,18 @@ public class RecipeJpaResource {
 		return recipeJpaRepository.findAll();
 	}
 
-	@GetMapping("/jpa/users/{user_id}/recipes")
-	public List<Recipe> getRecipesById(@PathVariable Long user_id) {
-		return recipeJpaRepository.findByUserId(user_id);
+	@GetMapping("/jpa/users/{user_email}/recipes")
+	public List<Recipe> getRecipesById(@PathVariable String user_email) {
+		JwtUserDetails user = userDetailsJpaRepository.findByemail(user_email);
+
+		return recipeJpaRepository.findByUserId(user.getId());
 		// return recipeJpaRepository.findByMailOwner(mailOwner);
 	}
 
-	@PutMapping("/jpa/users/{user_id}/recipes")
-	public ResponseEntity<Recipe[]> updateRecipes(@PathVariable Long user_id, @RequestBody Recipe[] recipes) {
+	@PutMapping("/jpa/users/{user_email}/recipes")
+	public ResponseEntity<Recipe[]> updateRecipes(@PathVariable String user_email, @RequestBody Recipe[] recipes) {
 		List<Recipe> newRecipes = new ArrayList<Recipe>(Arrays.asList(recipes));
-		Optional<JwtUserDetails> optUser = userDetailsJpaRepository.findById(user_id);
-		JwtUserDetails user = optUser.get();
+		JwtUserDetails user = userDetailsJpaRepository.findByemail(user_email);
 		List<Recipe> recipeToDelete = new ArrayList<Recipe>();
 		user.getRecipes().forEach(recipe -> {
 			if (!newRecipes.contains(recipe)) {

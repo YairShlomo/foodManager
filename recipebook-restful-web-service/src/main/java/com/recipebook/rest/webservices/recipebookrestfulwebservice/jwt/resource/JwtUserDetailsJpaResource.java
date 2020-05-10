@@ -153,11 +153,10 @@ public class JwtUserDetailsJpaResource implements UserDetailsService {
 		return user;
 	}
 
-	@PutMapping("/jpa/users/{user_id}/ingredients")
-	public ResponseEntity<Ingredient[]> updateIngredients(@PathVariable Long user_id,
+	@PutMapping("/jpa/users/{user_email}/ingredients")
+	public ResponseEntity<Ingredient[]> updateIngredients(@PathVariable String user_email,
 			@RequestBody Ingredient[] ingredients) {
-		Optional<JwtUserDetails> optUser = userDetailsJpaRepository.findById(user_id);
-		JwtUserDetails user = optUser.get();
+		JwtUserDetails user = userDetailsJpaRepository.findByemail(user_email);
 		List<Ingredient> newIngs = new ArrayList<Ingredient>(Arrays.asList(ingredients));
 		List<Ingredient> ingToDelete = new ArrayList<Ingredient>();
 		user.getIngredients().forEach(ing -> {
@@ -192,9 +191,10 @@ public class JwtUserDetailsJpaResource implements UserDetailsService {
 		return new ResponseEntity<Ingredient[]>(ingredientArray, HttpStatus.OK);
 	}
 
-	@GetMapping("/jpa/users/{user_id}/ingredients")
-	public Set<Ingredient> getIngredientsById(@PathVariable Long id) {
-		return userDetailsJpaRepository.findById(id).get().getIngredients();
+	@GetMapping("/jpa/users/{user_email}/ingredients")
+	public Set<Ingredient> getIngredientsById(@PathVariable String user_email) {
+		return userDetailsJpaRepository.findByemail(user_email).getIngredients();
+
 	}
 
 }

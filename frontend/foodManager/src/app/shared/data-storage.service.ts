@@ -6,18 +6,31 @@ import { map, tap, take, exhaustMap } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import { environment } from '../../environments/environment';
 import { User } from '../auth/user.model';
+import { ShoppingListService } from '../shopping-list/shopping-list.service';
+import { Ingredient } from './ingredient.model';
 @Injectable({ providedIn: 'root' })
 export class DataStorageService {
   private email: String;
   constructor(
     private http: HttpClient,
     private recipeService: RecipeService,
-    private authService: AuthService
+    private authService: AuthService,
+    private shoppingListService: ShoppingListService
   ) {
-    authService.user
-    .subscribe((user) => {
-      this.email = user.email
+    /*
+    authService.user.subscribe((user) => {
+      console.log("dd")
+
+      console.log(user.username)
+
+      console.log(user.email)
+      this.email = user.email;
     });
+    */
+   const userEmail: {
+    email: string;
+  } = JSON.parse(localStorage.getItem('userData'));
+      this.email = userEmail.email;
   }
 
   storeRecipes() {
@@ -30,7 +43,6 @@ export class DataStorageService {
   }
 
   fetchRecipes() {
-
     return this.http
       .get<Recipe[]>(`${environment.JPA_API_URL}/users/${this.email}/recipes`)
       .pipe(
@@ -48,5 +60,28 @@ export class DataStorageService {
           this.recipeService.setRecipes(recipes);
         })
       );
+  }
+
+  storeShoppingList() {
+    const ingredients = this.shoppingListService.getIngredients();
+    for (let ing of ingredients) {
+      console.log(ing.ing_id)
+      console.log(ing.name)
+      console.log(ing.amount)
+    }
+    this.http.put(`${environment.JPA_API_URL}/users/${this.email}/ingredients`,ingredients)
+    .subscribe((response) =>{
+      console.log(response);
+    })
+  }
+
+  fetchShoppingList() {
+    return this.http
+    .get<Ingredient[]>(`${environment.JPA_API_URL}/users/${this.email}/ingredients`)
+    .pipe(
+      tap((ingredients) => {
+        this.shoppingListService.setIngredients(ingredients);
+      })
+    )
   }
 }

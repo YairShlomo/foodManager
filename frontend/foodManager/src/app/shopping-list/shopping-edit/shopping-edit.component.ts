@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./shopping-edit.component.css']
 })
 export class ShoppingEditComponent implements OnInit, OnDestroy {
-  @ViewChild('f', { static: false}) sLForm: NgForm; 
+  @ViewChild('f', { static: false}) sLForm: NgForm;
   startEditSubs: Subscription;
   editMode = false;
   editedItemIndex: number;
@@ -35,7 +35,7 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
 
   onSubmitItem(form: NgForm) {
     const value = form.value;
-    const newIngredient = new Ingredient(value.name,value.amount);
+    const newIngredient = new Ingredient(null,value.name,value.amount);
     if (this.editMode) {
       this.sLService.updateIngredient(this.editedItemIndex,newIngredient)
     } else {

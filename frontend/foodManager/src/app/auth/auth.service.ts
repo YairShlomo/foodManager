@@ -18,7 +18,6 @@ export class AuthService {
     private tokenExpirationTimer: any;
     constructor(private http: HttpClient,
         private router: Router) {}
-
     signUp(email: string, username: string, password: string) {
         var url = environment.API_URL + '/signUp';
         return this.http
@@ -91,7 +90,6 @@ export class AuthService {
           expirationDate).getTime() - new Date().getTime();
         this.autoLogOut(expirationDuration);
         localStorage.setItem('userData',JSON.stringify(user));
-        
     }
 
     logOut() {
