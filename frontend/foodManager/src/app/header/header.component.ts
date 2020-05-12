@@ -13,7 +13,7 @@ import { Router, NavigationEnd} from '@angular/router';
 export class HeaderComponent implements OnInit,OnDestroy {
   private userSub : Subscription;
   private currPath : Subscription;
-  private email: String;
+  //private email: String;
   isAuthenticate = false;
   inRecipesBar = true;
 
@@ -24,6 +24,9 @@ export class HeaderComponent implements OnInit,OnDestroy {
 
   ngOnInit() {
     this.userSub = this.authSrevice.user.subscribe(user => {
+      if (user) {
+        this.dataStorageService.email = user.email;
+      }
       this.isAuthenticate = !!user;
     });
     this.currPath = this.router.events.subscribe((event) => {

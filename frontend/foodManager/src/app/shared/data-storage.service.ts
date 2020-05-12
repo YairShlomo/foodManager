@@ -10,7 +10,7 @@ import { ShoppingListService } from '../shopping-list/shopping-list.service';
 import { Ingredient } from './ingredient.model';
 @Injectable({ providedIn: 'root' })
 export class DataStorageService {
-  private email: String;
+  public email: String;
   constructor(
     private http: HttpClient,
     private recipeService: RecipeService,
@@ -19,18 +19,10 @@ export class DataStorageService {
   ) {
     /*
     authService.user.subscribe((user) => {
-      console.log("dd")
-
-      console.log(user.username)
-
       console.log(user.email)
       this.email = user.email;
     });
-    */
-   const userEmail: {
-    email: string;
-  } = JSON.parse(localStorage.getItem('userData'));
-      this.email = userEmail.email;
+*/
   }
 
   storeRecipes() {
