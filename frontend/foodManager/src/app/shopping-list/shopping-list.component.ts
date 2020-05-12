@@ -11,21 +11,12 @@ import { Store } from '@ngrx/store';
 })
 export class ShoppingListComponent implements OnInit, OnDestroy {
   ingredients: Observable<{ ingredients: Ingredient[] }>;
-  private ingChangedSub: Subscription;
   constructor(
     private sLService: ShoppingListService,
     private store: Store<{shoppingList: {ingredients: Ingredient[]}}>) {}
 
   ngOnInit(): void {
     this.ingredients = this.store.select('shoppingList')
-    /*
-    this.ingredients = this.sLService.getIngredients();
-    this.ingChangedSub = this.sLService.ingredientsChanged.subscribe(
-      (ingredients: Ingredient[]) => {
-        this.ingredients = ingredients;
-      }
-    );
-    */
   }
 
   onEditItem(index: number) {
@@ -33,8 +24,6 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-   // this.ingChangedSub.unsubscribe();
-   
   }
 
 }
