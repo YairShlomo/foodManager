@@ -1,7 +1,20 @@
 import { Ingredient } from '../../shared/ingredient.model';
 import * as ShoppingListActions from './shopping-list.actions'
-const initialState = {
-  ingredients: []
+
+export interface AppState {
+  shoppingList: State;
+}
+
+export interface State {
+  ingredients: Ingredient[];
+  editedIngredient : Ingredient;
+  editedIngredientIndex: number;
+}
+
+const initialState: State = {
+  ingredients: [],
+  editedIngredient : null,
+  editedIngredientIndex: -1
 };
 export function shoppingListRducer(state = initialState, action: ShoppingListActions.ShoppingListActions) {
   switch (action.type) {
@@ -16,25 +29,41 @@ export function shoppingListRducer(state = initialState, action: ShoppingListAct
         ingredients: [...state.ingredients, ...action.payload]
       }
     case ShoppingListActions.UPDATE_ING:
-      const ingredient = state.ingredients[action.payload.index];
+      const ingredient = state.ingredients[state.editedIngredientIndex];
       const updatedIng = {
         ...ingredient,
-        ...action.payload.ingredient
+        ...action.payload
       };
       const updatedIngs = [...state.ingredients];
-      updatedIngs[action.payload.index] = updatedIng;
+      updatedIngs[state.editedIngredientIndex] = updatedIng;
 
       return {
         ...state,
-        ingredients: updatedIngs
+        ingredients: updatedIngs,
+        editedIngredientIndex: -1,
+        editedIngredient: null
       }
     case ShoppingListActions.DELETE_ING:
       return {
         ...state,
         ingredients: state.ingredients.filter((ing , ingIndex) => {
-          return ingIndex !== action.payload.index;
+          return ingIndex !== state.editedIngredientIndex;
         })
       }
+    case ShoppingListActions.START_EDIT:
+      return {
+        //copying the state
+        ...state,
+        editedIngredientIndex: action.payload,
+        editedIngredient: { ...state.ingredients[action.payload] }
+      };
+    case ShoppingListActions.STOP_EDIT:
+      return {
+        //copying the state
+        ...state,
+        editedIngredientIndex: null,
+        editedIngredient: -1
+      };
     default:
       return state;
   }
