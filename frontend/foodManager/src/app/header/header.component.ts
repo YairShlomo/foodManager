@@ -45,7 +45,7 @@ export class HeaderComponent implements OnInit,OnDestroy {
     if(this.inRecipesBar) {
       this.dataStorageService.storeRecipes();
     } else {
-      this.dataStorageService.storeShoppingList();
+      //this.dataStorageService.storeShoppingList();
     }
   }
 
@@ -53,7 +53,7 @@ export class HeaderComponent implements OnInit,OnDestroy {
     if(this.inRecipesBar) {
       this.dataStorageService.fetchRecipes().subscribe();
     } else {
-      this.dataStorageService.fetchShoppingList().subscribe();
+      //this.dataStorageService.fetchShoppingList().subscribe();
     }
   }
 

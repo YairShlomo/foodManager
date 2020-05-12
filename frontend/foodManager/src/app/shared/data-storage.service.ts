@@ -6,7 +6,6 @@ import { map, tap, take, exhaustMap } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import { environment } from '../../environments/environment';
 import { User } from '../auth/user.model';
-import { ShoppingListService } from '../shopping-list/shopping-list.service';
 import { Ingredient } from './ingredient.model';
 @Injectable({ providedIn: 'root' })
 export class DataStorageService {
@@ -14,9 +13,8 @@ export class DataStorageService {
   constructor(
     private http: HttpClient,
     private recipeService: RecipeService,
-    private authService: AuthService,
-    private shoppingListService: ShoppingListService
-  ) {
+    private authService: AuthService
+    ) {
     /*
     authService.user.subscribe((user) => {
       console.log(user.email)
@@ -53,7 +51,7 @@ export class DataStorageService {
         })
       );
   }
-
+  /*
   storeShoppingList() {
     const ingredients = this.shoppingListService.getIngredients();
     for (let ing of ingredients) {
@@ -76,4 +74,5 @@ export class DataStorageService {
       })
     )
   }
+  */
 }

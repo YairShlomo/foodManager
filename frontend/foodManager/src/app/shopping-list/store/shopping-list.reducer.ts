@@ -61,8 +61,8 @@ export function shoppingListRducer(state = initialState, action: ShoppingListAct
       return {
         //copying the state
         ...state,
-        editedIngredientIndex: null,
-        editedIngredient: -1
+        editedIngredientIndex: -1,
+        editedIngredient: null
       };
     default:
       return state;
