@@ -5,6 +5,9 @@ import { RecipeService } from '../recipe.service';
 import { Ingredient } from 'src/app/shared/ingredient.model';
 import { Recipe } from '../recipe.model';
 import { AuthService } from 'src/app/auth/auth.service';
+import { Store } from '@ngrx/store';
+import * as fromApp from '../../store/app.reducer'
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -20,7 +23,8 @@ export class RecipeEditComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     private recipeService: RecipeService,
     private router: Router,
-    private authService: AuthService) { }
+    private authService: AuthService,
+    private store: Store<fromApp.AppState>) { }
 
   ngOnInit(): void {
     this.route.params
@@ -31,8 +35,11 @@ export class RecipeEditComponent implements OnInit {
         this.initForm();
       }
     )
-    this.authService.user
-    .subscribe((user) => {
+
+    this.store.select('auth').pipe(
+      map(authState => authState.user))
+      .subscribe(user => {
+
       this.mailOwner = user.email
     });
   }
