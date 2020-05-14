@@ -1,21 +1,22 @@
-import { Component, OnInit} from '@angular/core';
-import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { Component, OnInit, OnDestroy} from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService, AuthResponseData } from './auth.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../store/app.reducer'
 import * as AuthActions from './store/auth.actions'
-import { dispatch } from 'rxjs/internal/observable/pairs';
 @Component({
     selector: 'app-auth',
     templateUrl: './auth.component.html'
 })
-export class AuthComponent implements OnInit {
+export class AuthComponent implements OnInit, OnDestroy {
     isLoginMode = true;
     authForm: FormGroup;
     isLoading = false;
     error: string = null;
+
+    private storeSub: Subscription;
 
     constructor(
       private authService: AuthService,
@@ -29,12 +30,9 @@ export class AuthComponent implements OnInit {
             'password': new FormControl(null,[Validators.required,Validators.minLength(6)]),
             'username': new FormControl(null,[Validators.required])
         });
-        this.store.select('auth').subscribe(authState =>{
+        this.storeSub = this.store.select('auth').subscribe(authState =>{
           this.isLoading = authState.loading;
           this.error = authState.authError
-          if (this.error) {
-            //this.showErrorAlert(this.error);
-          }
         })
     }
 
@@ -58,29 +56,22 @@ export class AuthComponent implements OnInit {
         const email = this.authForm.value.email;
         const password = this.authForm.value.password;
         const username = this.authForm.value.username;
-        let authObs: Observable<AuthResponseData>;
         this.isLoading = true;
         if (this.isLoginMode) {
-            //authObs = this.authService.logIn(username,password);
-            this.store.dispatch(new AuthActions.LoginStart({username: username, password: password}));
+            this.store.dispatch(new AuthActions.LoginStart({ username: username, password: password }));
         } else {
-            authObs = this.authService.signUp(email,username, password);
+            this.store.dispatch(new AuthActions.SignupStart({ email: email, username: username, password: password }));
         }
-
-        // authObs.subscribe(
-        //     resData => {
-        //         this.isLoading = false;
-        //         this.router.navigate(['/recipes']);
-        //     },
-        //     errorMessage => {
-        //         this.error = errorMessage;
-        //         this.isLoading = false;
-        //     }
-        // );
         this.authForm.reset();
     }
 
     onHandleError() {
-        this.error = null;
+        this.store.dispatch(new AuthActions.ClearError());
+    }
+
+    ngOnDestroy() {
+      if (this.storeSub) {
+        this.storeSub.unsubscribe();
+      }
     }
 }

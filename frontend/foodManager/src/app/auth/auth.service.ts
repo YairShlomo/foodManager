@@ -24,47 +24,7 @@ export class AuthService {
         private router: Router,
         private store: Store<fromApp.AppState>
         ) {}
-    signUp(email: string, username: string, password: string) {
-        var url = environment.API_URL + '/signUp';
-        return this.http
-            .post<AuthResponseData>(url,
-                {
-                'email' : email,
-                'password' : password,
-                'username' : username
-                }
-            ).pipe(catchError(this.handleError),
-            tap(resData => {
-              this.handleAuthentication(
-                resData.email,
-                resData.username,
-                resData.token,
-                resData.expirationDate
-                );
-            })
-        );
-    }
-
-
-    logIn(username: string, password: string) {
-        return this.http
-            .post<AuthResponseData>(environment.API_URL + '/signIn',
-                {
-                'username' : username,
-                'password' : password,
-                }
-            ).pipe(catchError(this.handleError),
-            tap(resData => {
-                this.handleAuthentication(
-                  resData.email,
-                  resData.username,
-                  resData.token,
-                  resData.expirationDate
-                 );
-             })
-        );
-    }
-
+    
     autoLogIn() {
         const userData: {
             email: string;
@@ -82,7 +42,7 @@ export class AuthService {
             new Date(userData._tokenExpirationDate)
         );
         if (loadedUser.token) {
-            this.store.dispatch(new AuthActions.Login({
+            this.store.dispatch(new AuthActions.AuthenticateSuccess({
               email: loadedUser.email,
               username: loadedUser.username,
               token: loadedUser.token,
@@ -99,7 +59,7 @@ export class AuthService {
     private handleAuthentication(email: string, username: string, token:string, expirationDate: Date) {
         const user = new User(email,username,token,expirationDate);
         //this.user.next(user);
-        this.store.dispatch(new AuthActions.Login({
+        this.store.dispatch(new AuthActions.AuthenticateSuccess({
           email: email,
           username: username,
           token: token,
@@ -115,7 +75,6 @@ export class AuthService {
     logOut() {
         //this.user.next(null);
         this.store.dispatch(new AuthActions.Logout());
-        this.router.navigate(['/auth']);
         localStorage.removeItem('userData');
         if (this.tokenExpirationTimer) {
             clearTimeout(this.tokenExpirationTimer);

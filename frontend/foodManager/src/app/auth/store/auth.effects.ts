@@ -14,8 +14,68 @@ export interface AuthResponseData {
   username: string;
 }
 
+const handleAuthentication = (
+  email: string,
+  username: string ,
+  token: string,
+  expirationDate: Date
+) => {
+  return new AuthActions.AuthenticateSuccess({
+    email: email,
+    username: username,
+    token: token,
+    expirationDate: expirationDate,
+  });
+};
+
+const handleError = (errorRes) => {
+  let errorMessage = 'An unknown error occured!';
+  if (!errorRes.error) {
+    return of(new AuthActions.AuthenticateFail(errorMessage));
+  }
+  switch (errorRes.error) {
+    case 'USER_EXISTS':
+      errorMessage = 'This user exists already';
+      break;
+    case 'EMAIL_NOT_FOUND':
+      errorMessage = 'This email does not exist';
+      break;
+    case 'INVALID_PASSWORD':
+      errorMessage = 'This password is wrong';
+      break;
+  }
+  return of(new AuthActions.AuthenticateFail(errorMessage));
+};
+
 @Injectable()
 export class AuthEffects {
+  @Effect()
+  authSignup = this.actions$.pipe(
+    ofType(AuthActions.SIGNUP_START),
+    switchMap((signupAction: AuthActions.SignupStart) => {
+      var url = environment.API_URL + '/signUp';
+      return this.http.post<AuthResponseData>(url, {
+        email: signupAction.payload.email,
+        password: signupAction.payload.password,
+        username: signupAction.payload.username,
+      })
+      .pipe(
+        //map wrap the return object to observable
+        map(resData => {
+          return handleAuthentication(
+            resData.email,
+            resData.username,
+            resData.token,
+            resData.expirationDate
+          );
+        }),
+        catchError(errorRes => {
+          return handleError(errorRes)
+        })
+      );
+    })
+  );
+
   @Effect()
   authLogin = this.actions$.pipe(
     ofType(AuthActions.LOGIN_START),
@@ -27,39 +87,24 @@ export class AuthEffects {
         })
         .pipe(
           //map wrap the return object to observable
-          map((resData) => {
-            return new AuthActions.Login({
-              email: resData.email,
-              username: resData.username,
-              token: resData.token,
-              expirationDate: resData.expirationDate,
-            });
+          map(resData => {
+            return handleAuthentication(
+              resData.email,
+              resData.username,
+              resData.token,
+              resData.expirationDate
+            );
           }),
-          catchError((errorRes) => {
-            let errorMessage = 'An unknown error occured!';
-            if (!errorRes.error) {
-              return of(new AuthActions.LoginFail(errorMessage));
-            }
-            switch (errorRes.error) {
-              case 'USER_EXISTS':
-                errorMessage = 'This user exists already';
-                break;
-              case 'EMAIL_NOT_FOUND':
-                errorMessage = 'This email does not exist';
-                break;
-              case 'INVALID_PASSWORD':
-                errorMessage = 'This password is wrong';
-                break;
-            }
-            return of(new AuthActions.LoginFail(errorMessage));
+          catchError(errorRes => {
+            return handleError(errorRes)
           })
         );
     })
   );
 
   @Effect({ dispatch: false })
-  authSuccess = this.actions$.pipe(
-    ofType(AuthActions.LOGIN),
+  authRedirect = this.actions$.pipe(
+    ofType(AuthActions.AUTHENTICATE_SUCCESS, AuthActions.LOGOUT),
     tap(() => {
       this.router.navigate(['/']);
     })

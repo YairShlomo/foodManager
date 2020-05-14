@@ -10,12 +10,15 @@ export interface State {
 const initialState: State = {
   user: null,
   authError: null,
-  loading: false
+  loading: false,
 };
 
-export function authReducer(state = initialState, action: AuthActions.AuthActions) {
+export function authReducer(
+  state = initialState,
+  action: AuthActions.AuthActions
+) {
   switch (action.type) {
-    case AuthActions.LOGIN:
+    case AuthActions.AUTHENTICATE_SUCCESS:
       const user = new User(
         action.payload.email,
         action.payload.username,
@@ -26,25 +29,31 @@ export function authReducer(state = initialState, action: AuthActions.AuthAction
         ...state,
         authError: null,
         user: user,
-        loading: false
-      }
+        loading: false,
+      };
     case AuthActions.LOGOUT:
       return {
         ...state,
-        user: null
-      }
+        user: null,
+      };
     case AuthActions.LOGIN_START:
+    case AuthActions.SIGNUP_START:
       return {
         ...state,
         authError: null,
-        loading: true
-      }
-    case AuthActions.LOGIN_FAIL:
+        loading: true,
+      };
+    case AuthActions.AUTHENTICATE_FAIL:
       return {
         ...state,
         user: null,
         authError: action.payload,
-        loading: false
+        loading: false,
+      };
+    case AuthActions.CLEAR_ERROR:
+      return {
+        ...state,
+        authError: null
       }
     default:
       return state;
