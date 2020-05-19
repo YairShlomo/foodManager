@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import * as fromApp from '../store/app.reducer'
 import { map } from 'rxjs/operators';
 import * as AuthActions from '../auth/store/auth.actions'
-
+import * as RecipeActions from '../recipes/store/recipe.actions'
 @Component({
   selector: 'app-header',
   templateUrl:'./header.component.html',
@@ -17,7 +17,7 @@ import * as AuthActions from '../auth/store/auth.actions'
 export class HeaderComponent implements OnInit,OnDestroy {
   private userSub : Subscription;
   private currPath : Subscription;
-  //private email: String;
+  private email: string;
   isAuthenticate = false;
   inRecipesBar = true;
 
@@ -33,16 +33,17 @@ export class HeaderComponent implements OnInit,OnDestroy {
       map(authState => authState.user))
       .subscribe(user => {
       if (user) {
-        this.dataStorageService.email = user.email;
+        //this.dataStorageService.email = user.email;
+        this.email = user.email;
       }
       this.isAuthenticate = !!user;
     });
     this.currPath = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd ) {
-        if (event.url.includes("recipes")) {
-          this.inRecipesBar = true;
-        } else {
+        if (event.url.includes("shopping-list")) {
           this.inRecipesBar = false;
+        } else {
+          this.inRecipesBar = true;
         }
       }
       }
@@ -59,7 +60,7 @@ export class HeaderComponent implements OnInit,OnDestroy {
 
   onFetchData() {
     if(this.inRecipesBar) {
-      this.dataStorageService.fetchRecipes().subscribe();
+      this.store.dispatch(new RecipeActions.FetchRecipes(this.email));
     } else {
       //this.dataStorageService.fetchShoppingList().subscribe();
     }

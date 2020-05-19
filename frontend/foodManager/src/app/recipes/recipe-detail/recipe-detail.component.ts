@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Recipe } from '../recipe.model';
-import { RecipeService } from '../recipe.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Ingredient } from 'src/app/shared/ingredient.model';
+import { Store } from '@ngrx/store';
+import * as fromApp from '../../store/app.reducer'
+import { map, switchMap } from 'rxjs/operators';
+import { RecipeService } from '../recipe.service';
 @Component({
   selector: 'app-recipe-detail',
   templateUrl: './recipe-detail.component.html',
@@ -11,26 +14,39 @@ import { Ingredient } from 'src/app/shared/ingredient.model';
 export class RecipeDetailComponent implements OnInit {
   recipe: Recipe;
   id: number;
-  name: String = '';
-  description: String = '';
-  imagePath: String = '';
+  name: string = '';
+  description: string = '';
+  imagePath: string = '';
   ingredients: Ingredient[] = [];
 
-  constructor(private recipeService: RecipeService,
+  constructor(
     private route: ActivatedRoute,
-    private router: Router ) {}
+    private router: Router,
+    private recipeService: RecipeService,
+    private store: Store<fromApp.AppState>
+    ) {}
 
   ngOnInit(): void {
     this.route.params
-    .subscribe(
-      (params: Params) => {
-        this.id = +params['id'];
-        this.recipe = this.recipeService.getRecipe(this.id);
-        this.name = this.recipe.name;
-        this.description = this.recipe.description;
-        this.imagePath = this.recipe.imagePath;
-        this.ingredients = this.recipe.ingredients;
-      }
+    .pipe(map(params => {
+      return +params['id'];
+    }), switchMap(id => {
+      this.id = id;
+      return this.store.select('recipes');
+    }),
+    map(recipesState => {
+      return recipesState.recipes.find((recipe, index) => {
+        return index === this.id;
+      });
+    })
+    )
+    .subscribe(recipe => {
+      this.recipe = recipe;
+      this.name = this.recipe.name;
+      this.description = this.recipe.description;
+      this.imagePath = this.recipe.imagePath;
+      this.ingredients = this.recipe.ingredients;
+    }
     );
   }
 
