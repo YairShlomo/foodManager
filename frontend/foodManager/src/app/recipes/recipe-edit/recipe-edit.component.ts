@@ -1,23 +1,20 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
-import { RecipeService } from '../recipe.service';
 import { Ingredient } from 'src/app/shared/ingredient.model';
 import { Recipe } from '../recipe.model';
-import { AuthService } from 'src/app/auth/auth.service';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducer';
 import { map } from 'rxjs/operators';
 import * as RecipesActions from '../store/recipe.actions';
 import { Subscription } from 'rxjs';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 @Component({
   selector: 'app-recipe-edit',
   templateUrl: './recipe-edit.component.html',
   styleUrls: ['./recipe-edit.component.css'],
 })
 export class RecipeEditComponent implements OnInit, OnDestroy {
-  id: number;
+  id: number ;
   editMode = false;
   recipeForm: FormGroup;
   recipeId: number;
@@ -26,9 +23,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private recipeService: RecipeService,
     private router: Router,
-    private authService: AuthService,
     private store: Store<fromApp.AppState>
   ) {}
 
@@ -96,7 +91,6 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   onSubmit() {
     var recipe: Recipe = this.createRecipe(this.recipeForm.value);
     if (this.editMode) {
-      console.log("onsubmit" +recipe.recipeId)
       this.store.dispatch(
         new RecipesActions.UpdateRecipe({
           index: this.id,
@@ -117,7 +111,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     var ingredients: Ingredient[] = this.recipeForm.value['ingredients'];
 
     return new Recipe(
-      this.recipeId,
+      null,
       name,
       desc,
       imagePath,

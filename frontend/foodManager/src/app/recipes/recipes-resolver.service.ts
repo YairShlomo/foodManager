@@ -26,7 +26,6 @@ export class RecipesResolverService implements Resolve<Recipe[]> {
       _token: string;
       _tokenExpirationDate: string;
     } = JSON.parse(localStorage.getItem('userData'));
-    console.log('resolver' + userData.email);
     return this.store.select('recipes').pipe(
       take(1),
       map((recipesState) => {

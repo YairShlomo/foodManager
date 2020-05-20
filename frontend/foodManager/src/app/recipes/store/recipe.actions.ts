@@ -9,7 +9,7 @@ export const DELETE_RECIPE = '[Recipe] Delete Recipe';
 export const STORE_RECIPES = '[Recipe] Store Recipes';
 
 export class SetRecipes implements Action {
-  readonly type =  SET_RECIPES;
+  readonly type = SET_RECIPES;
 
   constructor(public payload: Recipe[]) {}
 }

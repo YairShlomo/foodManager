@@ -36,10 +36,8 @@ export class AuthComponent implements OnInit, OnDestroy {
         this.isLoginMode = !this.isLoginMode;
         this.authForm.reset();
         if (!this.isLoginMode) {
-          console.log("setfullvald")
           this.authForm.controls['email'].setValidators([Validators.required,Validators.email]);
         } else {
-          console.log("clearvald")
           this.authForm.controls['email'].clearValidators();
         }
         this.authForm.controls['email'].updateValueAndValidity()

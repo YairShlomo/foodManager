@@ -51,15 +51,6 @@ public class RecipeJpaResource {
 
 	@PutMapping("/jpa/users/{user_email}/recipes")
 	public ResponseEntity<Recipe[]> updateRecipes(@PathVariable String user_email, @RequestBody Recipe[] recipes) {
-		for (int i=0; i<recipes.length;i++) {
-			System.out.println(recipes[i].getRecipeId());
-			System.out.println(recipes[i].getName());
-			if (recipes[i].getUser()!=null) {
-				System.out.println(recipes[i].getUser().getId());
-			}
-
-		}
-		
 		List<Recipe> newRecipes = new ArrayList<Recipe>(Arrays.asList(recipes));
 		JwtUserDetails user = userDetailsJpaRepository.findByemail(user_email);
 		List<Recipe> recipeToDelete = new ArrayList<Recipe>();
@@ -70,9 +61,6 @@ public class RecipeJpaResource {
 			}
 		});
 		recipeToDelete.forEach(recipe -> {
-			System.out.println("delete"+recipe.getRecipeId());
-			System.out.println("delete"+recipe.getName());
-			
 			user.removeRecipe(recipe);
 			recipe.removeAllIngredients();
 			recipeJpaRepository.delete(recipe);
@@ -91,11 +79,6 @@ public class RecipeJpaResource {
 						if (existIng != null) {
 							recipe.getIngredients().remove(ing);
 							Ingredient existIdIng = ingredientJpaRepository.findById(existIng.getIng_id()).get();
-							System.out.println("exist"+existIdIng.getIng_id());
-							System.out.println("exist"+existIdIng.getName());
-							
-							System.out.println("exist"+existIdIng.getAmount());
-
 							recipe.addIngredient(existIdIng);
 						} else {
 							recipe.addIngredient(ing);
@@ -109,20 +92,6 @@ public class RecipeJpaResource {
 			}
 
 		});
-		System.out.println("gg"+newRecipes.get(0));
-		newRecipes.get(0).getIngredients().forEach(ing-> {
-			System.out.println(ing.getIng_id());
-			System.out.println(ing.getName());
-			System.out.println(ing.getAmount());
-		});
-		/*
-		newRecipes.forEach(recipe -> {
-			System.out.println("after"+recipe.getRecipeId());
-			System.out.println("after"+recipe.getName());
-			//System.out.println(recipe.getUser().getId());
-
-		});
-		*/
 		List<Recipe> updatedRecipes = recipeJpaRepository.saveAll(newRecipes);
 		// List<Recipe> updatedRecipes = new ArrayList<>();
 		Recipe[] recipesArray = {};
