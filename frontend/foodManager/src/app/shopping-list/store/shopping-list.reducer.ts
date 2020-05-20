@@ -60,6 +60,13 @@ export function shoppingListRducer(state = initialState, action: ShoppingListAct
         editedIngredientIndex: -1,
         editedIngredient: null
       };
+    case ShoppingListActions.SET_SL:
+      return {
+        ...state,
+        ingredients: [...action.payload],
+        editedIngredientIndex: -1,
+        editedIngredient: null
+      }
     default:
       return state;
   }

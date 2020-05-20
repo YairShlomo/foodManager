@@ -14,6 +14,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools'
 import { environment } from 'src/environments/environment';
 import { StoreRouterConnectingModule } from '@ngrx/router-store'
 import { RecipeEffects } from './recipes/store/recipe.effects';
+import { ShoppingListEffects } from './shopping-list/store/shopping-list.effects';
 
 
 @NgModule({
@@ -26,7 +27,7 @@ import { RecipeEffects } from './recipes/store/recipe.effects';
     HttpClientModule,
     AppRoutingModule,
     StoreModule.forRoot(fromApp.appReducer),
-    EffectsModule.forRoot([AuthEffects,RecipeEffects]),
+    EffectsModule.forRoot([AuthEffects, RecipeEffects, ShoppingListEffects]),
     StoreDevtoolsModule.instrument({ logOnly: environment.production }),
     StoreRouterConnectingModule.forRoot(),
     SharedModule,

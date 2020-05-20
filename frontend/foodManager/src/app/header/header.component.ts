@@ -4,8 +4,10 @@ import { Router, NavigationEnd} from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../store/app.reducer'
 import { map } from 'rxjs/operators';
-import * as AuthActions from '../auth/store/auth.actions'
-import * as RecipeActions from '../recipes/store/recipe.actions'
+import * as AuthActions from '../auth/store/auth.actions';
+import * as RecipeActions from '../recipes/store/recipe.actions';
+import * as ShoppinglistActions from '../shopping-list/store/shopping-list.actions';
+
 @Component({
   selector: 'app-header',
   templateUrl:'./header.component.html',
@@ -22,7 +24,6 @@ export class HeaderComponent implements OnInit,OnDestroy {
   constructor(
     private router: Router,
     private store: Store<fromApp.AppState>
-
   ) {}
 
   ngOnInit() {
@@ -47,10 +48,11 @@ export class HeaderComponent implements OnInit,OnDestroy {
   }
 
   onSaveData() {
+    console.log(this.inRecipesBar)
     if(this.inRecipesBar) {
       this.store.dispatch(new RecipeActions.StoreRecipes());
     } else {
-      //this.dataStorageService.storeShoppingList();
+      this.store.dispatch(new ShoppinglistActions.StoreShoppingList());
     }
   }
 
@@ -58,7 +60,7 @@ export class HeaderComponent implements OnInit,OnDestroy {
     if(this.inRecipesBar) {
       this.store.dispatch(new RecipeActions.FetchRecipes(this.email));
     } else {
-      //this.dataStorageService.fetchShoppingList().subscribe();
+      this.store.dispatch(new ShoppinglistActions.FetchShoppingList(this.email));
     }
   }
 
