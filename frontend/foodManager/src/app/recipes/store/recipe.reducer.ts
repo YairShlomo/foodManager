@@ -27,7 +27,9 @@ export function recipeReducer(
     case RecipesActions.UPDATE_RECIPE:
       const updatedRecipe = { ...state.recipes[action.payload.index],
       ...action.payload.newRecipe };
+      console.log("recipeId" +updatedRecipe.recipeId)
       const updatedRecipes = [...state.recipes];
+
       updatedRecipes[action.payload.index] = updatedRecipe
       return {
         ...state,

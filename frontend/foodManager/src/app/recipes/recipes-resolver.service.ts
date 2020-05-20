@@ -32,6 +32,7 @@ export class RecipesResolverService implements Resolve<Recipe[]> {
       map((recipesState) => {
         return recipesState.recipes;
       }),
+     // withLatestFrom(this.store.select('auth'))),
       switchMap((recipes) => {
         if (recipes.length === 0) {
           this.store.dispatch(new RecipesActions.FetchRecipes(userData.email));

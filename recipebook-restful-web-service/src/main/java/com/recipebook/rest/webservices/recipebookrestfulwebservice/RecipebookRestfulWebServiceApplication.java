@@ -33,8 +33,8 @@ public class RecipebookRestfulWebServiceApplication implements CommandLineRunner
 	    public void run(String... args) throws Exception {
 		
 	        // Cleanup the tables
-		// recipeJpaRepository.deleteAllInBatch();
-		// ingredientJpaRepository.deleteAllInBatch();
+		 recipeJpaRepository.deleteAllInBatch();
+		 ingredientJpaRepository.deleteAllInBatch();
 		 /*
 		 Ingredient ing1 = new Ingredient(-1L,"ing1",1l,null,null);
 	     List<Ingredient> ingredientList = new ArrayList<Ingredient>();

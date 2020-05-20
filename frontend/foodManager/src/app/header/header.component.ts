@@ -1,6 +1,4 @@
 import { Component , OnInit, OnDestroy} from '@angular/core';
-import { DataStorageService } from '../shared/data-storage.service';
-import { AuthService } from '../auth/auth.service';
 import { Subscription } from 'rxjs';
 import { Router, NavigationEnd} from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -21,8 +19,7 @@ export class HeaderComponent implements OnInit,OnDestroy {
   isAuthenticate = false;
   inRecipesBar = true;
 
-  constructor(private dataStorageService: DataStorageService,
-    private authSrevice: AuthService,
+  constructor(
     private router: Router,
     private store: Store<fromApp.AppState>
 
@@ -33,7 +30,6 @@ export class HeaderComponent implements OnInit,OnDestroy {
       map(authState => authState.user))
       .subscribe(user => {
       if (user) {
-        //this.dataStorageService.email = user.email;
         this.email = user.email;
       }
       this.isAuthenticate = !!user;
@@ -52,7 +48,7 @@ export class HeaderComponent implements OnInit,OnDestroy {
 
   onSaveData() {
     if(this.inRecipesBar) {
-      this.dataStorageService.storeRecipes();
+      this.store.dispatch(new RecipeActions.StoreRecipes());
     } else {
       //this.dataStorageService.storeShoppingList();
     }
