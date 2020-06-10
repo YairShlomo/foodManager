@@ -8,6 +8,7 @@
                 style="cursor: pointer"
                 *ngFor="let ingredient of (ingredients | async).ingredients; let i = index"
                 (click)="onEditItem(i)"
+                [@addToList]
             >
                 {{ingredient.name}} ({{ingredient.amount}})
             </a>

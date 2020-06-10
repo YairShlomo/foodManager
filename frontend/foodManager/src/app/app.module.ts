@@ -15,6 +15,7 @@ import { environment } from 'src/environments/environment';
 import { StoreRouterConnectingModule } from '@ngrx/router-store'
 import { RecipeEffects } from './recipes/store/recipe.effects';
 import { ShoppingListEffects } from './shopping-list/store/shopping-list.effects';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import { ShoppingListEffects } from './shopping-list/store/shopping-list.effects
     StoreRouterConnectingModule.forRoot(),
     SharedModule,
     CoreModule,
+    BrowserAnimationsModule
   ],
   bootstrap: [AppComponent],
 })
