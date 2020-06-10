@@ -42,11 +42,8 @@ const handleError = (errorRes) => {
     case 'USER_EXISTS':
       errorMessage = 'This user exists already';
       break;
-    case 'EMAIL_NOT_FOUND':
-      errorMessage = 'This email does not exist';
-      break;
-    case 'INVALID_PASSWORD':
-      errorMessage = 'This password is wrong';
+    case 'INVALID_CREDENTIALS':
+      errorMessage = 'The credentials are wrong';
       break;
   }
   return of(new AuthActions.AuthenticateFail(errorMessage));
@@ -73,6 +70,7 @@ export class AuthEffects {
           }),
           //map wrap the return object to observable
           map((resData) => {
+
             return handleAuthentication(
               resData.email,
               resData.username,
